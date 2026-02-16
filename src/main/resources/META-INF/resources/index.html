@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IKEA | Fulfilment Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary: #0058a3;
+            /* IKEA Blue */
+            --accent: #ffdb00;
+            /* IKEA Yellow */
+            --bg-dark: #121212;
+            --bg-card: #1e1e1e;
+            --text-light: #f5f5f5;
+            --text-gray: #a0a0a0;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand span {
+            color: var(--primary);
+        }
+
+        .navbar-brand .logo-accent {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: var(--text-gray);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--text-light);
+            background: var(--glass);
+        }
+
+        .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Cards & Sections */
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Forms */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        button,
+        input[type="submit"] {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-edit {
+            background-color: #333;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        /* Table/List */
+        .list-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px 6px 0 0;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .list-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--accent);
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 0.3s;
+        }
+
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+    </style>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module("WarehouseManagement", []);
+
+        app.controller("ManagementController", function ($scope, $http) {
+            $scope.currentView = 'products'; // Default view
+
+            $scope.setView = function (view) {
+                $scope.currentView = view;
+            };
+
+            // --- Products ---
+            // --- Products ---
+            $scope.products = [];
+            $scope.productForm = { id: -1, name: "", description: "", stock: 0 };
+
+            $scope.refreshProducts = function () {
+                $http({ method: 'GET', url: '/product' }).then(function (response) {
+                    $scope.products = response.data;
+                });
+            };
+
+            $scope.updateProduct = function () {
+                var method = $scope.productForm.id == -1 ? "POST" : "PUT";
+                var url = $scope.productForm.id == -1 ? '/product' : '/product/' + $scope.productForm.id;
+
+                var payload = angular.copy($scope.productForm);
+                if ($scope.productForm.id == -1) {
+                    delete payload.id;
+                }
+
+                $http({
+                    method: method,
+                    url: url,
+                    data: angular.toJson(payload),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function () { $scope.refreshProducts(); $scope.clearProductForm(); }, _error);
+            };
+
+            $scope.editProduct = function (product) {
+                $scope.productForm.name = product.name;
+                $scope.productForm.description = product.description;
+                $scope.productForm.id = product.id;
+                $scope.productForm.stock = product.stock;
+            };
+
+            $scope.removeProduct = function (product) {
+                if (confirm('Are you sure you want to delete this product?')) {
+                    $http({ method: 'DELETE', url: '/product/' + product.id }).then($scope.refreshProducts, _error);
+                }
+            };
+
+            $scope.clearProductForm = function () {
+                $scope.productForm = { id: -1, name: "", description: "", stock: 0 };
+            }
+
+            // --- Stores ---
+            $scope.stores = [];
+            $scope.storeForm = { id: -1, name: "", quantityProductsInStock: 0 };
+
+            $scope.refreshStores = function () {
+                $http({ method: 'GET', url: '/store' }).then(function (response) {
+                    $scope.stores = response.data;
+                });
+            };
+
+            $scope.updateStore = function () {
+                var method = $scope.storeForm.id == -1 ? "POST" : "PUT";
+                var url = $scope.storeForm.id == -1 ? '/store' : '/store/' + $scope.storeForm.id;
+
+                var payload = angular.copy($scope.storeForm);
+                if ($scope.storeForm.id == -1) {
+                    delete payload.id;
+                }
+
+                $http({
+                    method: method,
+                    url: url,
+                    data: angular.toJson(payload),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function () { $scope.refreshStores(); $scope.clearStoreForm(); }, _error);
+            };
+
+            $scope.editStore = function (store) {
+                $scope.storeForm.name = store.name;
+                $scope.storeForm.id = store.id;
+                $scope.storeForm.quantityProductsInStock = store.quantityProductsInStock;
+            };
+
+            $scope.removeStore = function (store) {
+                if (confirm('Are you sure you want to delete this store?')) {
+                    $http({ method: 'DELETE', url: '/store/' + store.id }).then($scope.refreshStores, _error);
+                }
+            };
+
+            $scope.clearStoreForm = function () {
+                $scope.storeForm = { id: -1, name: "", quantityProductsInStock: 0 };
+            }
+
+            // --- Warehouses ---
+            $scope.warehouses = [];
+            $scope.locations = []; // Available locations
+            $scope.warehouseForm = { businessUnitCode: "", location: "", capacity: 0, stock: 0 };
+            $scope.replacementForm = { businessUnitCode: "", location: "", capacity: 0, stock: 0 };
+            $scope.selectedWarehouseForReplacement = null;
+
+            $scope.refreshWarehouses = function () {
+                $http({ method: 'GET', url: '/warehouse' }).then(function (response) {
+                    $scope.warehouses = response.data;
+                }, function (response) {
+                    console.log("Error loading warehouses: " + response.statusText);
+                });
+            };
+
+            $scope.refreshLocations = function () {
+                $http({ method: 'GET', url: '/warehouse/locations' }).then(function (response) {
+                    $scope.locations = response.data;
+                });
+            };
+
+            $scope.createWarehouse = function () {
+                $http({
+                    method: "POST",
+                    url: '/warehouse',
+                    data: angular.toJson($scope.warehouseForm),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function () {
+                    $scope.refreshWarehouses();
+                    $scope.clearWarehouseForm();
+                    alert("Warehouse Created Successfully!");
+                }, _error);
+            };
+
+            $scope.archiveWarehouse = function (warehouse) {
+                if (confirm('Are you sure you want to ARCHIVE warehouse ' + warehouse.businessUnitCode + '? This action cannot be undone.')) {
+                    $http({
+                        method: 'DELETE',
+                        url: '/warehouse/' + warehouse.businessUnitCode
+                    }).then(function () {
+                        $scope.refreshWarehouses();
+                        alert("Warehouse Archived Successfully!");
+                    }, _error);
+                }
+            };
+
+            $scope.openReplaceModal = function (warehouse) {
+                $scope.selectedWarehouseForReplacement = warehouse;
+                $scope.replacementForm = {
+                    businessUnitCode: warehouse.businessUnitCode,
+                    location: "",
+                    capacity: warehouse.capacity,
+                    stock: warehouse.stock
+                };
+                setTimeout(function () { window.scrollTo(0, document.body.scrollHeight); }, 100);
+            };
+
+            $scope.cancelReplace = function () {
+                $scope.selectedWarehouseForReplacement = null;
+                $scope.replacementForm = { businessUnitCode: "", location: "", capacity: 0, stock: 0 };
+            };
+
+            $scope.submitReplace = function () {
+                if (!$scope.selectedWarehouseForReplacement) return;
+
+                var url = '/warehouse/' + $scope.selectedWarehouseForReplacement.businessUnitCode + '/replacement';
+                $http({
+                    method: "POST",
+                    url: url,
+                    data: angular.toJson($scope.replacementForm),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function () {
+                    $scope.refreshWarehouses();
+                    $scope.cancelReplace();
+                    alert("Warehouse Replaced Successfully!");
+                }, _error);
+            };
+
+            $scope.clearWarehouseForm = function () {
+                $scope.warehouseForm = { businessUnitCode: "", location: "", capacity: 0, stock: 0 };
+            };
+
+            function _error(response) {
+                alert("Error: " + (response.data ? (response.data.message || response.data.error) : response.statusText));
+            }
+
+            // --- Fulfillments ---
+            $scope.fulfillments = [];
+            $scope.fulfillmentForm = { storeId: "", productId: "", warehouseBusinessUnitCode: "" };
+
+            $scope.refreshFulfillments = function () {
+                $http({ method: 'GET', url: '/fulfillment' }).then(function (response) {
+                    $scope.fulfillments = response.data;
+                });
+            };
+
+            $scope.createFulfillment = function () {
+                $http({
+                    method: "POST",
+                    url: '/fulfillment',
+                    data: angular.toJson($scope.fulfillmentForm),
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(function () {
+                    $scope.refreshFulfillments();
+                    $scope.fulfillmentForm = { storeId: "", productId: "", warehouseBusinessUnitCode: "" };
+                    alert("Association Created Successfully!");
+                }, _error);
+            };
+
+            $scope.removeFulfillment = function (fulfillment) {
+                if (confirm('Are you sure you want to remove this association?')) {
+                    $http({ method: 'DELETE', url: '/fulfillment/' + fulfillment.id }).then(function () {
+                        $scope.refreshFulfillments();
+                        alert("Association Removed Successfully!");
+                    }, _error);
+                }
+            };
+
+            $scope.getStoreName = function (id) {
+                var s = $scope.stores.find(function (x) { return x.id == id; });
+                return s ? s.name : id;
+            };
+
+            $scope.getProductName = function (id) {
+                var p = $scope.products.find(function (x) { return x.id == id; });
+                return p ? p.name : id;
+            };
+
+            // Init
+            $scope.refreshProducts();
+            $scope.refreshStores();
+            $scope.refreshWarehouses();
+            $scope.refreshLocations();
+            $scope.refreshFulfillments();
+
+        });
+    </script>
+</head>
+
+<body ng-app="WarehouseManagement" ng-controller="ManagementController">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-boxes"></i>
+            <div>IKEA <span class="logo-accent">Fulfilment</span></div>
+        </div>
+        <div class="nav-links">
+            <div class="nav-link" ng-class="{'active': currentView === 'products'}" ng-click="setView('products')">
+                <i class="fas fa-cubes"></i> Product Management
+            </div>
+            <div class="nav-link" ng-class="{'active': currentView === 'warehouse'}" ng-click="setView('warehouse')">
+                <i class="fas fa-warehouse"></i> Warehouse Management
+            </div>
+            <div class="nav-link" ng-class="{'active': currentView === 'fulfillment'}"
+                ng-click="setView('fulfillment')">
+                <i class="fas fa-truck-loading"></i> Fulfillment
+            </div>
+            <a href="/q/swagger-ui" target="_blank" class="nav-link">
+                <i class="fas fa-code"></i> API Docs
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div ng-show="currentView === 'products'">
+            <div class="section-header">
+                <h2>Product & Store Inventory</h2>
+                <p style="color: var(--text-gray)">Manage your product catalog and store inventory levels.</p>
+            </div>
+
+            <!-- Products -->
+            <div class="card">
+                <h3>Products</h3>
+                <form ng-submit="updateProduct()">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" placeholder="Product Name" ng-model="productForm.name" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Description" ng-model="productForm.description" />
+                        </div>
+                        <div class="form-group" style="flex: 0 0 150px;">
+                            <input type="number" placeholder="Stock" ng-model="productForm.stock" required />
+                        </div>
+                        <button type="submit" class="btn-primary">{{ productForm.id == -1 ? 'Add Product' : 'Update'
+                            }}</button>
+                    </div>
+                </form>
+
+                <div class="list-header">
+                    <div>Name</div>
+                    <div>Stock</div>
+                    <div>Actions</div>
+                </div>
+                <div class="list-item" ng-repeat="product in products">
+                    <div>{{ product.name }}</div>
+                    <div style="color: var(--accent)">{{ product.stock }} units</div>
+                    <div class="actions">
+                        <button class="btn-sm btn-edit" ng-click="editProduct(product)">Edit</button>
+                        <button class="btn-sm btn-delete" ng-click="removeProduct(product)">Remove</button>
+                    </div>
+                </div>
+                <div ng-if="products.length == 0" style="padding: 20px; text-align: center; color: var(--text-gray)">
+                    No products found.
+                </div>
+            </div>
+
+            <!-- Stores -->
+            <div class="card">
+                <h3>Stores</h3>
+                <form ng-submit="updateStore()">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" placeholder="Store Name" ng-model="storeForm.name" required />
+                        </div>
+                        <div class="form-group" style="flex: 0 0 150px;">
+                            <input type="number" placeholder="Qty Stock" ng-model="storeForm.quantityProductsInStock"
+                                required />
+                        </div>
+                        <button type="submit" class="btn-primary">{{ storeForm.id == -1 ? 'Add Store' : 'Update'
+                            }}</button>
+                    </div>
+                </form>
+
+                <div class="list-header">
+                    <div>Store Location</div>
+                    <div>Stock Level</div>
+                    <div>Actions</div>
+                </div>
+                <div class="list-item" ng-repeat="store in stores">
+                    <div>{{ store.name }}</div>
+                    <div style="color: var(--accent)">{{ store.quantityProductsInStock }} units</div>
+                    <div class="actions">
+                        <button class="btn-sm btn-edit" ng-click="editStore(store)">Edit</button>
+                        <button class="btn-sm btn-delete" ng-click="removeStore(store)">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="currentView === 'warehouse'">
+            <div class="section-header">
+                <h2>Warehouse Operations</h2>
+                <p style="color: var(--text-gray)">Create warehouses, manage logistics, and optimize capacity.</p>
+            </div>
+
+            <!-- Create -->
+            <div class="card">
+                <h3>Create New Warehouse</h3>
+                <form ng-submit="createWarehouse()">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Business Unit Code</label>
+                            <input type="text" placeholder="e.g. BU-001" ng-model="warehouseForm.businessUnitCode"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Location ID</label>
+                            <select ng-model="warehouseForm.location" required>
+                                <option value="" disabled selected>Select Location</option>
+                                <option ng-repeat="loc in locations" value="{{loc.identification}}">
+                                    {{loc.identification}} (Max Cap: {{loc.maxCapacity}})</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Capacity</label>
+                            <input type="number" placeholder="Total Capacity" ng-model="warehouseForm.capacity"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Initial Stock</label>
+                            <input type="number" placeholder="Current Stock" ng-model="warehouseForm.stock" required />
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button type="submit" class="btn-primary" style="width: 200px;">Create Warehouse</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- List -->
+            <div class="card">
+                <h3>Active Warehouses</h3>
+                <div class="list-header" style="grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr;">
+                    <div>BU Code</div>
+                    <div>Location</div>
+                    <div>Capacity</div>
+                    <div>Stock</div>
+                    <div>Actions</div>
+                </div>
+                <div class="list-item" ng-repeat="wh in warehouses"
+                    style="grid-template-columns: 1fr 1fr 1fr 1fr 1.5fr;">
+                    <div style="font-weight: bold; color: var(--primary);">{{ wh.businessUnitCode }}</div>
+                    <div>{{ wh.location }}</div>
+                    <div>{{ wh.capacity }}</div>
+                    <div>{{ wh.stock }}</div>
+                    <div class="actions">
+                        <button class="btn-sm btn-primary" ng-click="openReplaceModal(wh)">Replace</button>
+                        <button class="btn-sm btn-delete" ng-click="archiveWarehouse(wh)">Archive</button>
+                    </div>
+                </div>
+                <div ng-if="warehouses.length == 0" style="padding: 20px; text-align: center; color: var(--text-gray)">
+                    No active warehouses found.
+                </div>
+            </div>
+
+            <!-- Replace Modal/Form (Inline for simplicity) -->
+            <div class="card" ng-show="selectedWarehouseForReplacement" style="border-color: var(--accent);">
+                <h3>Replace Warehouse: {{ selectedWarehouseForReplacement.businessUnitCode }}</h3>
+                <p style="color: var(--text-gray); font-size: 0.9rem;">
+                    Replacing a warehouse will archive the current one and create a new active warehouse in its place.
+                    <br /><b>Note:</b> New Capacity must be sufficient for current stock. New Stock must match current
+                    stock.
+                </p>
+                <form ng-submit="submitReplace()">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">New Business Unit
+                                Code</label>
+                            <input type="text" ng-model="replacementForm.businessUnitCode" required />
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">New Location ID</label>
+                            <select ng-model="replacementForm.location" required>
+                                <option value="" disabled selected>Select New Location</option>
+                                <option ng-repeat="loc in locations" value="{{loc.identification}}">
+                                    {{loc.identification}} (Max Cap: {{loc.maxCapacity}})</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">New Capacity</label>
+                            <input type="number" ng-model="replacementForm.capacity" required />
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Stock (Must Match
+                                Old)</label>
+                            <input type="number" ng-model="replacementForm.stock" required readonly
+                                style="opacity: 0.7; cursor: not-allowed;" />
+                        </div>
+                    </div>
+                    <div style="text-align: right; gap: 10px; display: flex; justify-content: flex-end;">
+                        <button type="button" class="btn-edit" ng-click="cancelReplace()">Cancel</button>
+                        <button type="submit" class="btn-primary">Confirm Replacement</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div ng-show="currentView === 'fulfillment'">
+            <div class="section-header">
+                <h2>Fulfillment Logistics</h2>
+                <p style="color: var(--text-gray)">Associate Warehouses to Stores and Products.</p>
+            </div>
+
+            <div class="card">
+                <h3>Create Fulfillment Association</h3>
+                <form ng-submit="createFulfillment()">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Store</label>
+                            <select ng-model="fulfillmentForm.storeId" required>
+                                <option value="" disabled selected>Select Store</option>
+                                <option ng-repeat="s in stores" value="{{s.id}}">{{s.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Product</label>
+                            <select ng-model="fulfillmentForm.productId" required>
+                                <option value="" disabled selected>Select Product</option>
+                                <option ng-repeat="p in products" value="{{p.id}}">{{p.name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="display:block; margin-bottom:5px; font-size:0.8rem">Warehouse</label>
+                            <select ng-model="fulfillmentForm.warehouseBusinessUnitCode" required>
+                                <option value="" disabled selected>Select Warehouse</option>
+                                <option ng-repeat="w in warehouses" value="{{w.businessUnitCode}}">
+                                    {{w.businessUnitCode}} ({{w.location}})</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <button type="submit" class="btn-primary" style="width: 200px;">Associtate</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Existing Associations</h3>
+                <div class="list-header" style="grid-template-columns: 2fr 2fr 1fr 1fr;">
+                    <div>Store</div>
+                    <div>Product</div>
+                    <div>Warehouse</div>
+                    <div>Actions</div>
+                </div>
+                <div class="list-item" ng-repeat="f in fulfillments" style="grid-template-columns: 2fr 2fr 1fr 1fr;">
+                    <div>{{ getStoreName(f.storeId) }}</div>
+                    <div>{{ getProductName(f.productId) }}</div>
+                    <div style="color: var(--accent)">{{ f.warehouseBusinessUnitCode }}</div>
+                    <div class="actions">
+                        <button class="btn-sm btn-delete" ng-click="removeFulfillment(f)">Remove</button>
+                    </div>
+                </div>
+                <div ng-if="fulfillments.length == 0"
+                    style="padding: 20px; text-align: center; color: var(--text-gray)">
+                    No fulfillment associations found.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
