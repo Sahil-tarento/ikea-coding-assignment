@@ -1,4 +1,4 @@
-name: Build Test and Publish Coverage
+name: Build Test and Publish Coverage Report
 
 on:
   push:
