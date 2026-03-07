@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build Test and Publish Coverage
 
 on:
   push:
@@ -11,6 +11,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
 
     steps:
 
@@ -27,12 +31,15 @@ jobs:
       - name: Build and Run Tests
         run: mvn clean verify
 
-      - name: Check Generated Files
-        run: ls -R target
+      - name: Prepare Coverage Report
+        run: |
+          mkdir public
+          cp -r target/jacoco-report/* public/
 
-      - name: Upload Test Coverage Report
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: jacoco-report
-          path: target/jacoco-report
-          if-no-files-found: warn
+          path: public
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
