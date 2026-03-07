@@ -27,8 +27,12 @@ jobs:
       - name: Build and Run Tests
         run: mvn clean verify
 
+      - name: Check Generated Files
+        run: ls -R target
+
       - name: Upload Test Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: target/site/jacoco
+          path: target/jacoco-report
+          if-no-files-found: warn
