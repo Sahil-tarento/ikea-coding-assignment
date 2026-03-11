@@ -32,26 +32,40 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   @Override
   @Transactional
   public void update(Warehouse warehouse) {
-    DbWarehouse dbWarehouse = find("businessUnitCode", warehouse.businessUnitCode).firstResult();
+    DbWarehouse dbWarehouse = null;
+    if (warehouse.id != null) {
+        dbWarehouse = findById(Long.parseLong(warehouse.id));
+    } else {
+        dbWarehouse = find("businessUnitCode = ?1 and archivedAt is null", warehouse.businessUnitCode).firstResult();
+    }
+    
     if (dbWarehouse != null) {
       dbWarehouse.location = warehouse.location;
       dbWarehouse.capacity = warehouse.capacity;
       dbWarehouse.stock = warehouse.stock;
       dbWarehouse.archivedAt = warehouse.archivedAt;
-      // createdAt and businessUnitCode should typically not change or are ignored
-      // here
     }
   }
 
   @Override
   @Transactional
   public void remove(Warehouse warehouse) {
-    delete("businessUnitCode", warehouse.businessUnitCode);
+    delete("businessUnitCode = ?1 and archivedAt is null", warehouse.businessUnitCode);
   }
 
   @Override
   public Warehouse findByBusinessUnitCode(String buCode) {
-    DbWarehouse dbWarehouse = find("businessUnitCode", buCode).firstResult();
+    DbWarehouse dbWarehouse = find("businessUnitCode = ?1 and archivedAt is null", buCode).firstResult();
     return dbWarehouse != null ? dbWarehouse.toWarehouse() : null;
+  }
+
+  @Override
+  public Warehouse findById(String id) {
+    try {
+      DbWarehouse dbWarehouse = findById(Long.parseLong(id));
+      return dbWarehouse != null && dbWarehouse.archivedAt == null ? dbWarehouse.toWarehouse() : null;
+    } catch (NumberFormatException e) {
+      return null;
+    }
   }
 }

@@ -80,11 +80,11 @@ public class WarehouseResourceImplTest {
     @Test
     public void testArchiveWarehouse() {
         given()
-                .when().delete("/warehouse/BU-1")
+                .when().delete("/warehouse/1")
                 .then()
                 .statusCode(204);
 
-        Mockito.verify(archiveWarehouseOperation).archive("BU-1");
+        Mockito.verify(archiveWarehouseOperation).archive("1");
     }
 
     @Test
@@ -126,13 +126,52 @@ public class WarehouseResourceImplTest {
     @Test
     public void testGetSingleWarehouse() {
         Warehouse w = new Warehouse();
+        w.id = "1";
         w.businessUnitCode = "BU-1";
-        Mockito.when(warehouseRepository.findByBusinessUnitCode("BU-1")).thenReturn(w);
+        Mockito.when(warehouseRepository.findById("1")).thenReturn(w);
 
         given()
-                .when().get("/warehouse/BU-1")
+                .when().get("/warehouse/1")
                 .then()
                 .statusCode(200)
                 .body("businessUnitCode", is("BU-1"));
+    }
+
+    @Test
+    public void testGetSingleWarehouseNotFound() {
+        Mockito.when(warehouseRepository.findById("MISSING")).thenReturn(null);
+
+        given()
+                .when().get("/warehouse/MISSING")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    public void testArchiveWarehouseError() {
+        Mockito.doThrow(new IllegalArgumentException("Not found"))
+                .when(archiveWarehouseOperation).archive("MISSING");
+
+        given()
+                .when().delete("/warehouse/MISSING")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    public void testReplaceWarehouseError() {
+        com.warehouse.api.beans.Warehouse dto = new com.warehouse.api.beans.Warehouse();
+        dto.setBusinessUnitCode("BU-NEW");
+        dto.setStock(50);
+
+        Mockito.doThrow(new IllegalArgumentException("Validation failed"))
+                .when(replaceWarehouseOperation).replace(Mockito.anyString(), Mockito.any());
+
+        given()
+                .contentType("application/json")
+                .body(dto)
+                .when().post("/warehouse/BU-OLD/replacement")
+                .then()
+                .statusCode(400);
     }
 }

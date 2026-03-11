@@ -41,7 +41,7 @@ public class WarehouseResourceImpl implements WarehouseResource {
 
   @Override
   public Warehouse getAWarehouseUnitByID(String id) {
-    var domainWarehouse = warehouseRepository.findByBusinessUnitCode(id);
+    var domainWarehouse = warehouseRepository.findById(id);
     if (domainWarehouse == null) {
       throw new jakarta.ws.rs.WebApplicationException("Warehouse not found", 404);
     }
@@ -93,6 +93,7 @@ public class WarehouseResourceImpl implements WarehouseResource {
   private Warehouse toWarehouseResponse(
       com.fulfilment.application.monolith.warehouses.domain.models.Warehouse warehouse) {
     var response = new Warehouse();
+    response.setId(warehouse.id);
     response.setBusinessUnitCode(warehouse.businessUnitCode);
     response.setLocation(warehouse.location);
     response.setCapacity(warehouse.capacity);

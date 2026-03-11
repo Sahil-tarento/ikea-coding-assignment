@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 public class Warehouse {
 
+  public String id;
+
   // unique identifier
   public String businessUnitCode;
 

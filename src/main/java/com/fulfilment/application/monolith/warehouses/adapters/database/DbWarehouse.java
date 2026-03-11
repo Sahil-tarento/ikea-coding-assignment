@@ -31,6 +31,9 @@ public class DbWarehouse {
 
   public Warehouse toWarehouse() {
     var warehouse = new Warehouse();
+    if (this.id != null) {
+      warehouse.id = String.valueOf(this.id);
+    }
     warehouse.businessUnitCode = this.businessUnitCode;
     warehouse.location = this.location;
     warehouse.capacity = this.capacity;

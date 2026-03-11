@@ -20,14 +20,15 @@ public class ArchiveWarehouseUseCaseTest {
 
     @Test
     public void testArchiveSuccess() {
-        String buCode = "BU-001";
+        String id = "1";
         Warehouse warehouse = new Warehouse();
-        warehouse.businessUnitCode = buCode;
+        warehouse.id = id;
+        warehouse.businessUnitCode = "BU-001";
         warehouse.archivedAt = null;
 
-        Mockito.when(warehouseStore.findByBusinessUnitCode(buCode)).thenReturn(warehouse);
+        Mockito.when(warehouseStore.findById(id)).thenReturn(warehouse);
 
-        archiveWarehouseUseCase.archive(buCode);
+        archiveWarehouseUseCase.archive(id);
 
         Assertions.assertNotNull(warehouse.archivedAt);
         Mockito.verify(warehouseStore).update(warehouse);
@@ -35,9 +36,9 @@ public class ArchiveWarehouseUseCaseTest {
 
     @Test
     public void testArchiveNotFound() {
-        String buCode = "BU-404";
-        Mockito.when(warehouseStore.findByBusinessUnitCode(buCode)).thenReturn(null);
+        String id = "some-id";
+        Mockito.when(warehouseStore.findById(id)).thenReturn(null);
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> archiveWarehouseUseCase.archive(buCode));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> archiveWarehouseUseCase.archive(id));
     }
 }

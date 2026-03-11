@@ -17,8 +17,8 @@ public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
   }
 
   @Override
-  public void archive(String businessUnitCode) {
-    Warehouse warehouse = warehouseStore.findByBusinessUnitCode(businessUnitCode);
+  public void archive(String id) {
+    Warehouse warehouse = warehouseStore.findById(id);
     if (warehouse == null) {
          throw new IllegalArgumentException("Warehouse not found");
     }

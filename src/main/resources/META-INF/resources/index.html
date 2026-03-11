@@ -362,7 +362,7 @@
                 if (confirm('Are you sure you want to ARCHIVE warehouse ' + warehouse.businessUnitCode + '? This action cannot be undone.')) {
                     $http({
                         method: 'DELETE',
-                        url: '/warehouse/' + warehouse.businessUnitCode
+                        url: '/warehouse/' + warehouse.id
                     }).then(function () {
                         $scope.refreshWarehouses();
                         alert("Warehouse Archived Successfully!");
