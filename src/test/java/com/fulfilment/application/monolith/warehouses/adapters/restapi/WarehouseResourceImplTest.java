@@ -134,6 +134,5 @@ public class WarehouseResourceImplTest {
                 .then()
                 .statusCode(200)
                 .body("businessUnitCode", is("BU-1"));
-
     }
 }

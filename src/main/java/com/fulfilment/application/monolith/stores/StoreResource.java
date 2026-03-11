@@ -22,8 +22,6 @@ import java.util.List;
 public class StoreResource {
 
   @Inject
-  LegacyStoreManagerGateway legacyStoreManagerGateway;
-  @Inject
   StoreService storeService;
 
   @GET
@@ -49,8 +47,6 @@ public class StoreResource {
 
     storeService.create(store);
 
-    legacyStoreManagerGateway.createStoreOnLegacySystem(store);
-
     return Response.ok(store).status(201).build();
   }
 
@@ -67,8 +63,6 @@ public class StoreResource {
       throw new WebApplicationException("Store with id of " + id + " does not exist.", 404);
     }
 
-    legacyStoreManagerGateway.updateStoreOnLegacySystem(updatedStore);
-
     return entity;
   }
 
@@ -84,8 +78,6 @@ public class StoreResource {
     if (entity == null) {
       throw new WebApplicationException("Store with id of " + id + " does not exist.", 404);
     }
-
-    legacyStoreManagerGateway.updateStoreOnLegacySystem(updatedStore);
 
     return entity;
   }
